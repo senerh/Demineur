@@ -6,25 +6,25 @@ import java.awt.event.MouseEvent;
 import java.util.Observable;
 import java.util.Observer;
 
+import javax.swing.Icon;
 import javax.swing.ImageIcon;
+import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import Modele.Square;
 
-public class SquareView extends JPanel implements Observer
+public class SquareView extends JButton implements Observer
 {
 	private Square square;
 	
-	private JLabel image;
+	private static final Icon FLAG = new ImageIcon(ClassLoader.getSystemResource("drapeau.png"));
 	
 	public SquareView(Square _square)
     {
         super();
         
         square = _square;
-        
-        image = new JLabel();
         
         square.addObserver(this);
         
@@ -49,13 +49,13 @@ public class SquareView extends JPanel implements Observer
                 }
                 //grid.Mark(x, y);
             }
-            
+            /*
             public void mouseEntered(MouseEvent e)
             {
             	super.mouseEntered(e);
             	if (!square.isMarked())
             		setBackground(Color.GRAY);
-            }
+            }*/
             
             public void mouseExited(MouseEvent e)
             {
@@ -70,14 +70,11 @@ public class SquareView extends JPanel implements Observer
 	{
 		if (square.isMarked())
 		{
-			image.setIcon(new ImageIcon("images/drapeau.png"));	
-			//setBackground(Color.black);
-			add(image);
-			
+	        this.setIcon(FLAG);
 		}
 		else
 		{
-			setBackground(Color.white);
+			this.setIcon(null);
 		}
 	}
 }

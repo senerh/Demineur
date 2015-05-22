@@ -12,7 +12,7 @@ public class Main
 			public void run()
 			{
 				Grid grid = new Grid(10, 10);
-				Vue fenetre = new Vue(grid);
+				Window fenetre = new Window(grid);
 				fenetre.setVisible(true);
 			}
 		});

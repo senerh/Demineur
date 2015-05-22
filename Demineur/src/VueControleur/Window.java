@@ -16,12 +16,12 @@ import javax.swing.border.Border;
 
 import Modele.*;
 
-public class Vue extends JFrame
+public class Window extends JFrame
 {
 	private Grid grid;
 	private JComponent pan;
 	
-    public Vue(Grid _grid)
+    public Window(Grid _grid)
     {
         super();
         
