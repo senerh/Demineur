@@ -1,18 +1,22 @@
 package Modele;
 
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Observable;
 
 public class Square extends Observable
 {
-	private int x;
-	private int y;
 	private boolean isMarked;
+	private boolean isMine;
+	private List<Square> listNeighbours;
+	private boolean isDiscovered;
 	
-	public Square(int _x, int _y)
+	public Square(boolean _isMine)
 	{
-		x = _x;
-		y = _y;
+		isMine = _isMine;
 		isMarked = false;
+		listNeighbours = new LinkedList<Square>();
+		isDiscovered = false;
 	}
 	
 	public void mark()
@@ -26,6 +30,10 @@ public class Square extends Observable
 		return isMarked;
 	}
 	
+	public boolean isMine()
+	{
+		return isMine;
+	}
 	
 	public void notifier()
 	{
@@ -33,19 +41,64 @@ public class Square extends Observable
 	    notifyObservers();
 	}
 
-	public int getX()
-	{
-		return x;
-	}
-	
-	public int getY()
-	{
-		return y;
-	}
-
 	public void unMark()
 	{
 		isMarked = false;
 		notifier();
+	}
+
+	public void setMine()
+	{
+		isMine = true;
+	}
+
+	public void addNeighbour(Square square)
+	{
+		listNeighbours.add(square);
+	}
+	
+	public boolean isDiscovered()
+	{
+		return isDiscovered;
+	}
+	
+	public void discoverNeighbours()
+	{
+		if (!isMine)
+		{
+			isDiscovered = true;
+			for (Square s : listNeighbours)
+			{
+				if (!s.isDiscovered())
+				{
+					s.discoverNeighbours();
+				}
+			}
+		}
+		notifier();
+	}
+	
+	public int getNbMines()
+	{
+		int nb = 0;
+		for (Square s : listNeighbours)
+		{
+			if (s.isMine())
+				nb++;
+		}
+		return nb;
+	}
+	
+	public void discover()
+	{
+		if (isMine)
+		{
+			isDiscovered = true;
+			notifier();
+		}
+		else
+		{
+			discoverNeighbours();
+		}
 	}
 }

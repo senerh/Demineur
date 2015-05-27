@@ -47,7 +47,10 @@ public class SquareView extends JButton implements Observer
                 		square.mark();
                 	}
                 }
-                //grid.Mark(x, y);
+                if (e.getButton() == MouseEvent.BUTTON1)
+                {
+                	square.discover();
+                }
             }
             /*
             public void mouseEntered(MouseEvent e)
@@ -55,7 +58,7 @@ public class SquareView extends JButton implements Observer
             	super.mouseEntered(e);
             	if (!square.isMarked())
             		setBackground(Color.GRAY);
-            }*/
+            }
             
             public void mouseExited(MouseEvent e)
             {
@@ -63,18 +66,37 @@ public class SquareView extends JButton implements Observer
             	if (!square.isMarked())
             		setBackground(Color.WHITE);
             }
+            */
         });
     }
 
 	public void update(Observable arg0, Object arg1)
 	{
-		if (square.isMarked())
+		if (square.isDiscovered())
 		{
-	        this.setIcon(FLAG);
+			if (square.getNbMines() == 0)
+			{
+				this.setBackground(Color.WHITE);
+			}
+			else
+			{
+				this.setText("" + square.getNbMines());
+			}
 		}
 		else
 		{
-			this.setIcon(null);
+			if (square.isMarked())
+			{
+		        this.setIcon(FLAG);
+			}
+			else
+			{
+				this.setIcon(null);
+			}
+		}
+		if (square.isMine())
+		{
+			setBackground(Color.RED);
 		}
 	}
 }
