@@ -18,14 +18,14 @@ import Modele.*;
 
 public class Window extends JFrame
 {
-	private Grid grid;
+	private Game game;
 	private JComponent pan;
 	
-    public Window(Grid _grid)
+    public Window(Game _game)
     {
         super();
         
-        grid = _grid;
+        game = _game;
         
         build();
         
@@ -62,14 +62,14 @@ public class Window extends JFrame
         
         setTitle("Demineur de l'espace");
         setSize(400, 400);
-        pan = new JPanel (new GridLayout(grid.getHeight(), grid.getWidth()));
+        pan = new JPanel (new GridLayout(game.getGrid().getHeight(), game.getGrid().getWidth()));
         Border blackline = BorderFactory.createLineBorder(Color.black,1);
         
-        for(int i = 0; i<grid.getWidth(); i++)
+        for(int i = 0; i<game.getGrid().getWidth(); i++)
         {
-        	for (int j=0; j<grid.getHeight(); j++)
+        	for (int j=0; j<game.getGrid().getHeight(); j++)
         	{
-        		JComponent ptest = new SquareView(grid.getSquare(i, j));
+        		JComponent ptest = new SquareView(game, game.getGrid().getSquare(i, j));
                 ptest.setBorder(blackline);
                 pan.add(ptest);
         	}

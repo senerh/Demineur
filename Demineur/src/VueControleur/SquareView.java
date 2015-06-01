@@ -9,26 +9,28 @@ import java.util.Observer;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
 
+import Modele.Game;
 import Modele.Square;
 
 public class SquareView extends JButton implements Observer
 {
+	private Game game;
 	private Square square;
 	
 	private static final Icon FLAG = new ImageIcon(ClassLoader.getSystemResource("drapeau.png"));
 	
-	public SquareView(Square _square)
+	public SquareView(Game _game, Square _square)
     {
         super();
+        
+        game = _game;
         
         square = _square;
         
         square.addObserver(this);
         
-        setBackground(Color.white);
+        setBackground(Color.GRAY);
         
         addMouseListener(new MouseAdapter()
         {
@@ -38,18 +40,11 @@ public class SquareView extends JButton implements Observer
                 super.mouseClicked(e);
                 if(e.getButton() == MouseEvent.BUTTON3)
                 {
-                	if (square.isMarked())
-                	{
-                		square.unMark();
-                	}
-                	else
-                	{
-                		square.mark();
-                	}
+                	square.setFlag();
                 }
                 if (e.getButton() == MouseEvent.BUTTON1)
                 {
-                	square.discover();
+                	game.discover(square);
                 }
             }
             /*
@@ -74,29 +69,30 @@ public class SquareView extends JButton implements Observer
 	{
 		if (square.isDiscovered())
 		{
-			if (square.getNbMines() == 0)
+			if (square.isMine())
 			{
-				this.setBackground(Color.WHITE);
+				setBackground(Color.RED);
 			}
 			else
 			{
-				this.setText("" + square.getNbMines());
+				setBackground(Color.WHITE);
+				if (square.getNbMines() != 0)
+				{
+					setText("" + square.getNbMines());
+				}
 			}
 		}
 		else
 		{
 			if (square.isMarked())
 			{
-		        this.setIcon(FLAG);
+		        setIcon(FLAG);
 			}
 			else
 			{
-				this.setIcon(null);
+				setBackground(Color.GRAY);
+				setIcon(null);
 			}
-		}
-		if (square.isMine())
-		{
-			setBackground(Color.RED);
 		}
 	}
 }

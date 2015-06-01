@@ -11,9 +11,9 @@ public class Main
         {
 			public void run()
 			{
-				Grid grid = new Grid(10, 10);
-				Window fenetre = new Window(grid);
-				fenetre.setVisible(true);
+				Game game = new Game();
+				Window window = new Window(game);
+				window.setVisible(true);
 			}
 		});
     }

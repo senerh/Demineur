@@ -11,9 +11,9 @@ public class Square extends Observable
 	private List<Square> listNeighbours;
 	private boolean isDiscovered;
 	
-	public Square(boolean _isMine)
+	public Square()
 	{
-		isMine = _isMine;
+		isMine = false;
 		isMarked = false;
 		listNeighbours = new LinkedList<Square>();
 		isDiscovered = false;
@@ -69,9 +69,16 @@ public class Square extends Observable
 			isDiscovered = true;
 			for (Square s : listNeighbours)
 			{
-				if (!s.isDiscovered())
+				if (!s.isDiscovered() && !s.isMarked)
 				{
-					s.discoverNeighbours();
+					if (s.getNbMines() == 0)
+					{
+						s.discoverNeighbours();
+					}
+					else
+					{
+						s.discover();
+					}
 				}
 			}
 		}
@@ -91,14 +98,13 @@ public class Square extends Observable
 	
 	public void discover()
 	{
-		if (isMine)
-		{
-			isDiscovered = true;
-			notifier();
-		}
-		else
-		{
-			discoverNeighbours();
-		}
+		isDiscovered = true;
+		notifier();
+	}
+
+	public void setFlag()
+	{
+		isMarked = !isMarked;
+		notifier();
 	}
 }
