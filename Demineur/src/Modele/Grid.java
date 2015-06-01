@@ -11,7 +11,7 @@ public class Grid
 	private int height;
 	private Square[][] grid;
 	
-	public Grid(int _width, int _height)
+	public Grid(int _width, int _height, int nbMines)
 	{
 		width = _width;
 		height = _height;
@@ -30,7 +30,7 @@ public class Grid
 		
 		int i_random;
 		int j_random;
-		for (int i=0; i<10; i++)
+		for (int i=0; i<nbMines; i++)
 		{
 			do
 			{

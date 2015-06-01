@@ -38,7 +38,7 @@ public class SquareView extends JButton implements Observer
                 super.mouseClicked(e);
                 if(e.getButton() == MouseEvent.BUTTON3)
                 {
-                	square.setFlag();
+                	game.setFlag(square);
                 }
                 if (e.getButton() == MouseEvent.BUTTON1)
                 {

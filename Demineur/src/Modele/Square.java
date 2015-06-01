@@ -81,8 +81,8 @@ public class Square extends Observable
 					}
 				}
 			}
+			notifier();
 		}
-		notifier();
 	}
 	
 	public int getNbMines()
@@ -99,12 +99,6 @@ public class Square extends Observable
 	public void discover()
 	{
 		isDiscovered = true;
-		notifier();
-	}
-
-	public void setFlag()
-	{
-		isMarked = !isMarked;
 		notifier();
 	}
 }

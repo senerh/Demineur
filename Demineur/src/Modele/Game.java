@@ -3,10 +3,14 @@ package Modele;
 public class Game
 {
 	private Grid grid;
+	private int nbMines;
+	private int nbFlags;
 	
 	public Game()
 	{
-		grid = new Grid(10, 10);
+		nbMines = 10;
+		nbFlags = 0;
+		grid = new Grid(10, 10, nbMines);
 	}
 	
 	public Grid getGrid()
@@ -34,6 +38,23 @@ public class Game
 					square.discover();
 					square.discoverNeighbours();
 				}
+			}
+		}
+	}
+
+	public void setFlag(Square square)
+	{
+		if (square.isMarked())
+		{
+			nbFlags--;
+			square.unMark();
+		}
+		else
+		{
+			if (nbFlags < nbMines)
+			{
+				nbFlags++;
+				square.mark();
 			}
 		}
 	}
