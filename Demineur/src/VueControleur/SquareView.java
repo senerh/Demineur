@@ -18,8 +18,6 @@ public class SquareView extends JButton implements Observer
 	private Game game;
 	private Square square;
 	
-	private static final Icon FLAG = new ImageIcon(ClassLoader.getSystemResource("drapeau.png"));
-	
 	public SquareView(Game _game, Square _square)
     {
         super();
@@ -86,7 +84,7 @@ public class SquareView extends JButton implements Observer
 		{
 			if (square.isMarked())
 			{
-		        setIcon(FLAG);
+		        setIcon(Ressources.FLAG);
 			}
 			else
 			{

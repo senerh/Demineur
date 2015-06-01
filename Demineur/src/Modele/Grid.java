@@ -28,16 +28,15 @@ public class Grid
 		
 		Random r = new Random();
 		
+		int i_random;
+		int j_random;
 		for (int i=0; i<10; i++)
 		{
-			int i_random;
-			int j_random;
 			do
 			{
 				i_random = r.nextInt(width);
 				j_random = r.nextInt(height);
-			}
-			while(grid[i_random][j_random].isMine());
+			} while(grid[i_random][j_random].isMine());
 			grid[i_random][j_random].setMine();
 		}
 		

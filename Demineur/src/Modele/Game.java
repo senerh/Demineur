@@ -31,10 +31,10 @@ public class Game
 				}
 				else
 				{
+					square.discover();
 					square.discoverNeighbours();
 				}
 			}
 		}
-		square.discover();
 	}
 }
