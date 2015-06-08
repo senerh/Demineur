@@ -1,15 +1,21 @@
 package Modele;
 
-public class Game
+import java.util.Observable;
+
+public class Game extends Observable
 {
 	private Grid grid;
 	private int nbMines;
 	private int nbFlags;
+	private boolean isWon;
+	private boolean isLost;
 	
 	public Game()
 	{
 		nbMines = 10;
 		nbFlags = 0;
+		isWon = false;
+		isLost = false;
 		grid = new Grid(10, 10, nbMines);
 	}
 	
@@ -24,7 +30,7 @@ public class Game
 		{
 			if (square.isMine())
 			{
-				//perdu
+				isLost = true;
 				square.discover();
 			}
 			else
@@ -35,27 +41,63 @@ public class Game
 				}
 				else
 				{
-					square.discover();
 					square.discoverNeighbours();
 				}
+				
+				if (grid.getNbUndiscoveredSquares() == getNbMines())
+				{
+					isWon = true;
+				}
 			}
+			notifier();
 		}
 	}
 
 	public void setFlag(Square square)
 	{
-		if (square.isMarked())
+		if (!square.isDiscovered())
 		{
-			nbFlags--;
-			square.unMark();
-		}
-		else
-		{
-			if (nbFlags < nbMines)
+			if (square.isMarked())
 			{
-				nbFlags++;
-				square.mark();
+				nbFlags--;
+				square.unMark();
+				notifier();
+			}
+			else
+			{
+				if (nbFlags < nbMines)
+				{
+					nbFlags++;
+					square.mark();
+					notifier();
+				}
 			}
 		}
+	}
+	
+	private void notifier()
+	{
+		setChanged();
+	    notifyObservers();
+	}
+	
+	public int getNbMines()
+	{
+		return nbMines;
+	}
+	
+	public int getNbFlags()
+	{
+		return nbFlags;
+	}
+	
+	public boolean isWon()
+	{
+		return isWon;
+	}
+	
+	public boolean isLost()
+	{
+		return isLost;
 	}
 }

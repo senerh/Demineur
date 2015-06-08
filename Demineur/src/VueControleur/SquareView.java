@@ -45,21 +45,6 @@ public class SquareView extends JButton implements Observer
                 	game.discover(square);
                 }
             }
-            /*
-            public void mouseEntered(MouseEvent e)
-            {
-            	super.mouseEntered(e);
-            	if (!square.isMarked())
-            		setBackground(Color.GRAY);
-            }
-            
-            public void mouseExited(MouseEvent e)
-            {
-            	super.mouseExited(e);
-            	if (!square.isMarked())
-            		setBackground(Color.WHITE);
-            }
-            */
         });
     }
 

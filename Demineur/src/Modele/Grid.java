@@ -10,19 +10,21 @@ public class Grid
 	private int width;
 	private int height;
 	private Square[][] grid;
-	
+	private int nbUndiscoveredSquares;
+
 	public Grid(int _width, int _height, int nbMines)
 	{
 		width = _width;
 		height = _height;
-		
+		nbUndiscoveredSquares = width * height;
+
 		grid = new Square[width][height];
 		
 		for (int i=0; i<width; i++)
 		{
 			for (int j=0; j<height; j++)
 			{
-				grid[i][j] = new Square();
+				grid[i][j] = new Square(this);
 			}
 		}
 		
@@ -98,5 +100,15 @@ public class Grid
 	public Square getSquare(int x, int y)
 	{
 		return grid[x][y];
+	}
+	
+	public int getNbUndiscoveredSquares()
+	{
+		return nbUndiscoveredSquares;
+	}
+
+	public void discoveredSquare()
+	{
+		nbUndiscoveredSquares--;
 	}
 }

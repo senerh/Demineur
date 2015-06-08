@@ -10,13 +10,15 @@ public class Square extends Observable
 	private boolean isMine;
 	private List<Square> listNeighbours;
 	private boolean isDiscovered;
+	private Grid grid; 
 	
-	public Square()
+	public Square(Grid _grid)
 	{
 		isMine = false;
 		isMarked = false;
 		listNeighbours = new LinkedList<Square>();
 		isDiscovered = false;
+		grid = _grid;
 	}
 	
 	public void mark()
@@ -66,22 +68,17 @@ public class Square extends Observable
 	{
 		if (!isMine)
 		{
-			isDiscovered = true;
 			for (Square s : listNeighbours)
 			{
-				if (!s.isDiscovered() && !s.isMarked)
+				if (!s.isDiscovered() && !s.isMarked())
 				{
+					s.discover();
 					if (s.getNbMines() == 0)
 					{
 						s.discoverNeighbours();
 					}
-					else
-					{
-						s.discover();
-					}
 				}
 			}
-			notifier();
 		}
 	}
 	
@@ -99,6 +96,7 @@ public class Square extends Observable
 	public void discover()
 	{
 		isDiscovered = true;
+		grid.discoveredSquare();
 		notifier();
 	}
 }
