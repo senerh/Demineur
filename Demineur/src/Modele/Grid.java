@@ -9,14 +9,16 @@ public class Grid
 {
 	private int width;
 	private int height;
-	private Square[][] grid;
 	private int nbUndiscoveredSquares;
+	private Square[][] grid;
+	private List<Square> listMines;
 
 	public Grid(int _width, int _height, int nbMines)
 	{
 		width = _width;
 		height = _height;
 		nbUndiscoveredSquares = width * height;
+		listMines = new LinkedList<Square>();
 
 		grid = new Square[width][height];
 		
@@ -40,6 +42,7 @@ public class Grid
 				j_random = r.nextInt(height);
 			} while(grid[i_random][j_random].isMine());
 			grid[i_random][j_random].setMine();
+			listMines.add(grid[i_random][j_random]);
 		}
 		
 		for (int x=0; x<width; x++)
@@ -110,5 +113,16 @@ public class Grid
 	public void discoveredSquare()
 	{
 		nbUndiscoveredSquares--;
+	}
+
+	public void discoverMines()
+	{
+		for (Square s : listMines)
+		{
+			if (!s.isMarked())
+			{
+				s.discover();
+			}
+		}
 	}
 }

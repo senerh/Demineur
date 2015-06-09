@@ -12,11 +12,16 @@ public class Game extends Observable
 	
 	public Game()
 	{
-		nbMines = 10;
+		this(10, 10, 10);
+	}
+	
+	public Game(int _width, int _height, int _nbMines)
+	{
+		nbMines = _nbMines;
+		grid = new Grid(_width, _height, nbMines);
 		nbFlags = 0;
 		isWon = false;
 		isLost = false;
-		grid = new Grid(10, 10, nbMines);
 	}
 	
 	public Grid getGrid()
@@ -32,6 +37,7 @@ public class Game extends Observable
 			{
 				isLost = true;
 				square.discover();
+				grid.discoverMines();
 			}
 			else
 			{
@@ -41,6 +47,7 @@ public class Game extends Observable
 				}
 				else
 				{
+					square.discover();
 					square.discoverNeighbours();
 				}
 				

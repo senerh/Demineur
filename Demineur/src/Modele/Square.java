@@ -95,8 +95,11 @@ public class Square extends Observable
 	
 	public void discover()
 	{
-		isDiscovered = true;
-		grid.discoveredSquare();
-		notifier();
+		if (!isDiscovered)
+		{
+			isDiscovered = true;
+			grid.discoveredSquare();
+			notifier();
+		}
 	}
 }

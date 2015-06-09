@@ -5,6 +5,8 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.Observable;
 import java.util.Observer;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
@@ -17,6 +19,7 @@ public class SquareView extends JButton implements Observer
 {
 	private Game game;
 	private Square square;
+	private static ExecutorService executor = Executors.newFixedThreadPool(1);
 	
 	public SquareView(Game _game, Square _square)
     {
@@ -36,13 +39,32 @@ public class SquareView extends JButton implements Observer
             public void mousePressed(MouseEvent e)
             {
                 super.mouseClicked(e);
-                if(e.getButton() == MouseEvent.BUTTON3)
+                if (!game.isWon() && !game.isLost())
                 {
-                	game.setFlag(square);
-                }
-                if (e.getButton() == MouseEvent.BUTTON1)
-                {
-                	game.discover(square);
+                	if(e.getButton() == MouseEvent.BUTTON3)
+                    {
+                		executor.execute(new Runnable()
+                        {
+        					@Override
+        					public void run()
+        					{
+        						game.setFlag(square);
+        					}
+                        	
+                        });
+                    }
+                    if (e.getButton() == MouseEvent.BUTTON1)
+                    {
+                    	executor.execute(new Runnable()
+                        {
+        					@Override
+        					public void run()
+        					{
+        						game.discover(square);
+        					}
+                        	
+                        });
+                    }
                 }
             }
         });
@@ -55,6 +77,7 @@ public class SquareView extends JButton implements Observer
 			if (square.isMine())
 			{
 				setBackground(Color.RED);
+				setIcon(Ressources.MINE);
 			}
 			else
 			{
@@ -62,6 +85,35 @@ public class SquareView extends JButton implements Observer
 				if (square.getNbMines() != 0)
 				{
 					setText("" + square.getNbMines());
+					switch (square.getNbMines())
+					{
+					case 1:
+						setForeground(Color.BLUE);
+						break;
+					case 2:
+						setForeground(Color.GREEN);
+						break;
+					case 3:
+						setForeground(Color.RED);
+						break;
+					case 4:
+						setForeground(Color.BLACK);
+						break;
+					case 5:
+						setForeground(Color.DARK_GRAY);
+						break;
+					case 6:
+						setForeground(Color.ORANGE);
+						break;
+					case 7:
+						setForeground(Color.PINK);
+						break;
+					case 8:
+						setForeground(Color.MAGENTA);
+						break;
+					default:
+						break;
+					}
 				}
 			}
 		}
