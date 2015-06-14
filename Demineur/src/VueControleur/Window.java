@@ -2,7 +2,10 @@ package VueControleur;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Component;
+import java.awt.Graphics;
 import java.awt.GridLayout;
+import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
@@ -22,6 +25,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JMenu;
 import javax.swing.border.Border;
+import javax.swing.border.EmptyBorder;
 
 import Modele.*;
 
@@ -29,7 +33,10 @@ public class Window extends JFrame implements Observer
 {
 	private Game game;
 	private JComponent grid;
-	private JLabel label;
+	private JLabel lblFlags;
+	private JLabel lblTime;
+	private Timer timer;
+	private int time;
 	
     public Window(Game _game)
     {
@@ -47,9 +54,27 @@ public class Window extends JFrame implements Observer
                 System.exit(0);
             }
         });
+        
+        timer = new Timer();
+        
+        timer.scheduleAtFixedRate(new TimerTask() {
+        	  @Override
+        	  public void run() {
+        		  displayTime();
+        	  }
+        	}, 1000, 1000);
     }
     
-    public void build()
+    private void displayTime()
+	{
+    	if (!game.isWon() && !game.isLost())
+    	{
+    		time++;
+    		lblTime.setText("" + time);
+    	}
+	}
+
+	public void build()
     {
         //JMenu jm = new JMenu();
         JMenuBar jm = new JMenuBar();
@@ -61,7 +86,7 @@ public class Window extends JFrame implements Observer
 			@Override
 			public void actionPerformed(ActionEvent arg0)
 			{
-				label.setText("Nouvelle partie facile !");
+				lblFlags.setText("Nouvelle partie facile !");
 				remove(grid);
 				buildGrid(new Game(10, 10, 5));
 				validate();
@@ -75,7 +100,7 @@ public class Window extends JFrame implements Observer
 			@Override
 			public void actionPerformed(ActionEvent arg0)
 			{
-				label.setText("Nouvelle partie moyenne !");
+				lblFlags.setText("Nouvelle partie moyenne !");
 				remove(grid);
 				buildGrid(new Game(15, 15, 20));
 				validate();
@@ -89,7 +114,7 @@ public class Window extends JFrame implements Observer
 			@Override
 			public void actionPerformed(ActionEvent arg0)
 			{
-				label.setText("Nouvelle partie difficile !");
+				lblFlags.setText("Nouvelle partie difficile !");
 				remove(grid);
 				buildGrid(new Game(20, 20, 50));
 				validate();
@@ -103,9 +128,18 @@ public class Window extends JFrame implements Observer
         
         setTitle("Demineur");
         setSize(400, 400);
-        label = new JLabel("Démineur du futur !!!");
-        JPanel panel = new JPanel();
-        panel.add(label);
+        
+        JPanel panel = new JPanel(new BorderLayout());
+        
+        lblFlags = new JLabel();
+        lblFlags.setBorder(new EmptyBorder(20, 0, 0, 20));
+        
+        lblTime = new JLabel("0");
+        lblTime.setBorder(new EmptyBorder(20, 20, 0, 0));
+        
+        panel.add(lblFlags, BorderLayout.EAST);
+        panel.add(lblTime, BorderLayout.WEST);
+        
         add(panel, BorderLayout.PAGE_START);
         //setContentPane(pan);
     }
@@ -116,26 +150,28 @@ public class Window extends JFrame implements Observer
 		if (game.isWon())
 		{
 			JOptionPane.showMessageDialog(null,"Bravo ;) !"); 
-			label.setText("Vous avez gagné !");
 		}
 		else if (game.isLost())
 		{
 			JOptionPane.showMessageDialog(null,"Dommage ;( !"); 
-			label.setText("Vous avez perdu :'( !");
 		}
 		else
 		{
-			label.setText("Il vous reste " + (game.getNbMines() - game.getNbFlags()) + " drapeaux.");
+			lblFlags.setText("" + (game.getNbMines() - game.getNbFlags()));
 		}
 	}
 	
 	private void buildGrid(Game _game)
 	{
+		time = 0;
 		game = _game;
 		game.addObserver(this);
+		
+		lblFlags.setText("" + game.getNbMines());
+		
 		grid = new JPanel (new GridLayout(game.getGrid().getHeight(), game.getGrid().getWidth()));
         Border blackline = BorderFactory.createLineBorder(Color.black,1);
-        
+        grid.setBorder(new EmptyBorder(20, 20, 20, 20));
         for(int i = 0; i<game.getGrid().getWidth(); i++)
         {
         	for (int j=0; j<game.getGrid().getHeight(); j++)
@@ -145,7 +181,6 @@ public class Window extends JFrame implements Observer
                 grid.add(ptest);
         	}
         }
-        grid.setBorder(blackline);
         add(grid);
 	}
 }
