@@ -22,6 +22,7 @@ public class Game extends Observable
 		nbFlags = 0;
 		isWon = false;
 		isLost = false;
+
 	}
 	
 	public Grid getGrid()

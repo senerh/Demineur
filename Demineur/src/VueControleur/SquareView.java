@@ -1,6 +1,8 @@
 package VueControleur;
 
 import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Image;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.Observable;
@@ -20,11 +22,11 @@ public class SquareView extends JButton implements Observer
 	private Game game;
 	private Square square;
 	private static ExecutorService executor = Executors.newFixedThreadPool(1);
-	
+
 	public SquareView(Game _game, Square _square)
     {
         super();
-        
+        this.
         game = _game;
         
         square = _square;
@@ -32,7 +34,7 @@ public class SquareView extends JButton implements Observer
         square.addObserver(this);
         
         setBackground(Color.GRAY);
-        
+        setIcon(Ressources.SQUARE);
         addMouseListener(new MouseAdapter()
         {
             @Override
@@ -76,45 +78,46 @@ public class SquareView extends JButton implements Observer
 		{
 			if (square.isMine())
 			{
-				setBackground(Color.RED);
+				//setBackground(Color.RED);
 				setIcon(Ressources.MINE);
 			}
 			else
 			{
 				setBackground(Color.WHITE);
-				if (square.getNbMines() != 0)
-				{
-					setText("" + square.getNbMines());
+				//if (square.getNbMines() != 0)
+				//{
+					//setText("" + square.getNbMines());
 					switch (square.getNbMines())
 					{
 					case 1:
-						setForeground(Color.BLUE);
+						setIcon(Ressources.SQUARE1);
 						break;
 					case 2:
-						setForeground(Color.GREEN);
+						setIcon(Ressources.SQUARE2);
 						break;
 					case 3:
-						setForeground(Color.RED);
+						setIcon(Ressources.SQUARE3);
 						break;
 					case 4:
-						setForeground(Color.BLACK);
+						setIcon(Ressources.SQUARE4);
 						break;
 					case 5:
-						setForeground(Color.DARK_GRAY);
+						setIcon(Ressources.SQUARE5);
 						break;
 					case 6:
-						setForeground(Color.ORANGE);
+						setIcon(Ressources.SQUARE6);
 						break;
 					case 7:
-						setForeground(Color.PINK);
+						setIcon(Ressources.SQUARE7);
 						break;
 					case 8:
-						setForeground(Color.MAGENTA);
+						setIcon(Ressources.SQUARE8);
 						break;
 					default:
+						setIcon(Ressources.SQUAREVIDE);
 						break;
 					}
-				}
+				//}
 			}
 		}
 		else
@@ -125,8 +128,8 @@ public class SquareView extends JButton implements Observer
 			}
 			else
 			{
-				setBackground(Color.GRAY);
-				setIcon(null);
+				setIcon(Ressources.SQUARE);
+
 			}
 		}
 	}

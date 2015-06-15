@@ -19,7 +19,6 @@ public class Grid
 		height = _height;
 		nbUndiscoveredSquares = width * height;
 		listMines = new LinkedList<Square>();
-
 		grid = new Square[width][height];
 		
 		for (int i=0; i<width; i++)
@@ -125,4 +124,6 @@ public class Grid
 			}
 		}
 	}
+
+
 }
