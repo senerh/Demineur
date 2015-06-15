@@ -18,7 +18,6 @@ import java.util.Observer;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
@@ -29,9 +28,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JMenu;
 import javax.swing.SwingConstants;
-import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
-import javax.swing.Icon;
 import javax.swing.ImageIcon;
 
 import Modele.*;
@@ -42,13 +39,13 @@ public class Window extends JFrame implements Observer
 	private JComponent grid;
 	private JLabel lblFlags;
 	private JLabel lblTime;
+	private JLabel lblPlayer;
 	private Timer timer;
 	private int time;
 	public static Dimension DSquare;
 
     public Window(Game _game)
     {
-
         super();
     	DSquare = new Dimension(70,70);
     	createResources(DSquare);
@@ -92,53 +89,19 @@ public class Window extends JFrame implements Observer
         JMenuBar jm = new JMenuBar();
         
         JMenu m = new JMenu("Nouvelle Partie");
-        JMenuItem mi = new JMenuItem("Facile");
-        mi.addActionListener(new ActionListener()
-        {
-			@Override
-			public void actionPerformed(ActionEvent arg0)
-			{
-				lblFlags.setText("Nouvelle partie facile !");
-				remove(grid);
-				DSquare = new Dimension(70,70);
-				createResources(DSquare);
-				buildGrid(new Game(10, 10, 15));
-				validate();
-			}
-        });
-        m.add(mi);
+        JMenu mj1 = new JMenu("1 Joueur");
+        JMenu mj2 = new JMenu("2 Joueurs");
         
-        mi = new JMenuItem("Moyen");
-        mi.addActionListener(new ActionListener()
-        {
-			@Override
-			public void actionPerformed(ActionEvent arg0)
-			{
-				lblFlags.setText("Nouvelle partie moyenne !");
-				remove(grid);
-				DSquare = new Dimension(45,45);
-				createResources(DSquare);
-				buildGrid(new Game(15, 15, 20));
-				validate();
-			}
-        });
-        m.add(mi);
+        mj1.add(createGame("Facile", 10, 10, 15, false));
+        mj1.add(createGame("Moyen", 15, 15, 20, false));
+        mj1.add(createGame("Difficile", 20, 20, 50, false));
         
-        mi = new JMenuItem("Difficile");
-        mi.addActionListener(new ActionListener()
-        {
-			@Override
-			public void actionPerformed(ActionEvent arg0)
-			{
-				lblFlags.setText("Nouvelle partie difficile !");
-				remove(grid);
-				DSquare = new Dimension(35,35);
-				createResources(DSquare);
-				buildGrid(new Game(20, 20, 50));
-				validate();
-			}
-        });
-        m.add(mi);
+        mj2.add(createGame("Facile", 10, 10, 15, true));
+        mj2.add(createGame("Moyen", 15, 15, 20, true));
+        mj2.add(createGame("Difficile", 20, 20, 50, true));
+        
+        m.add(mj1);
+        m.add(mj2);
         
         jm.add(m);
         
@@ -152,15 +115,18 @@ public class Window extends JFrame implements Observer
         lblFlags = new JLabel();
         lblFlags.setBorder(new EmptyBorder(20, 0, 0, 20));
         
-        lblTime = new JLabel("0");
+        lblTime = new JLabel("Temps : 0");
         lblTime.setBorder(new EmptyBorder(20, 20, 0, 0));
+        
+        lblPlayer = new JLabel("");
+        lblPlayer.setBorder(new EmptyBorder(20, 250, 0, 0));
         
         panel.add(lblFlags, BorderLayout.EAST);
         panel.add(lblTime, BorderLayout.WEST);
+        panel.add(lblPlayer, BorderLayout.CENTER);
         
         add(panel, BorderLayout.PAGE_START);
         setResizable(false);
-        //setContentPane(pan);
     }
 
 	@Override
@@ -168,14 +134,32 @@ public class Window extends JFrame implements Observer
 	{
 		if (game.isWon())
 		{
-			JOptionPane.showMessageDialog(null,"Bravo ;) !"); 
+			if (game.isTwoPlayers())
+			{
+				JOptionPane.showMessageDialog(null,"Bravo, Joueur " + game.getCurrentPlayer() +" a gagné en " + time + "s. !");
+			}
+			else
+			{
+				JOptionPane.showMessageDialog(null,"Bravo, vous avez gagné en " + time + "s. !");
+			}
 		}
 		else if (game.isLost())
 		{
-			JOptionPane.showMessageDialog(null,"Dommage ;( !"); 
+			if (game.isTwoPlayers())
+			{
+				JOptionPane.showMessageDialog(null,"Dommage, Joueur " + game.getCurrentPlayer() +" a perdu en " + time + "s. !");
+			}
+			else
+			{
+				JOptionPane.showMessageDialog(null,"Dommage, vous avez perdu en " + time + "s. !");
+			}
 		}
 		else
 		{
+			if (game.isTwoPlayers())
+			{
+				lblPlayer.setText("Joueur " + game.getCurrentPlayer());
+			}
 			lblFlags.setText("" + (game.getNbMines() - game.getNbFlags()));
 		}
 	}
@@ -186,7 +170,7 @@ public class Window extends JFrame implements Observer
 		game = _game;
 		game.addObserver(this);
 		
-
+		lblPlayer.setText("");
 		lblFlags.setText("" + game.getNbMines());
 		grid = new JPanel (new GridLayout(game.getGrid().getHeight(), game.getGrid().getWidth()));
 		grid.setMinimumSize(new Dimension(400,400));
@@ -207,8 +191,8 @@ public class Window extends JFrame implements Observer
         add(grid);
 	}
 	
-    private void createResources(Dimension dSquare2) {
-    	
+    private void createResources(Dimension dSquare2)
+    {
     	Ressources.FLAG = new ImageIcon(new ImageIcon(ClassLoader.getSystemResource("drapeau.png")).getImage().getScaledInstance(DSquare.height, DSquare.width, Image.SCALE_SMOOTH));
 		Ressources.MINE = new ImageIcon(new ImageIcon(ClassLoader.getSystemResource("mine.png")).getImage().getScaledInstance(DSquare.height, DSquare.width, Image.SCALE_SMOOTH));
 		Ressources.SQUARE = new ImageIcon(new ImageIcon(ClassLoader.getSystemResource("Square.png")).getImage().getScaledInstance(DSquare.height, DSquare.width, Image.SCALE_SMOOTH));
@@ -221,6 +205,29 @@ public class Window extends JFrame implements Observer
 		Ressources.SQUARE6 = new ImageIcon(new ImageIcon(ClassLoader.getSystemResource("Square6.png")).getImage().getScaledInstance(DSquare.height, DSquare.width, Image.SCALE_SMOOTH));
 		Ressources.SQUARE7 = new ImageIcon(new ImageIcon(ClassLoader.getSystemResource("Square7.png")).getImage().getScaledInstance(DSquare.height, DSquare.width, Image.SCALE_SMOOTH));
 		Ressources.SQUARE8 = new ImageIcon(new ImageIcon(ClassLoader.getSystemResource("Square8.png")).getImage().getScaledInstance(DSquare.height, DSquare.width, Image.SCALE_SMOOTH));
-
+    }
+    
+    private JMenuItem createGame(String name, final int width, final int height, final int nbMines, final boolean isTwoPlayers)
+    {
+    	JMenuItem mi = new JMenuItem(name);
+        mi.addActionListener(new ActionListener()
+        {
+			@Override
+			public void actionPerformed(ActionEvent arg0)
+			{
+				lblFlags.setText("Nouvelle partie moyenne !");
+				remove(grid);
+				DSquare = new Dimension(700/width, 700/height);
+				createResources(DSquare);
+				buildGrid(new Game(width, height, nbMines, isTwoPlayers));
+				if (isTwoPlayers)
+				{
+					lblPlayer.setText("Joueur 1");
+				}
+				validate();
+			}
+        });
+        
+        return mi;
     }
 }

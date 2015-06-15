@@ -9,20 +9,23 @@ public class Game extends Observable
 	private int nbFlags;
 	private boolean isWon;
 	private boolean isLost;
+	private int currentPlayer;
+	private boolean isTwoPlayers;
 	
 	public Game()
 	{
-		this(10, 10, 10);
+		this(10, 10, 10, false);
 	}
 	
-	public Game(int _width, int _height, int _nbMines)
+	public Game(int _width, int _height, int _nbMines, boolean _isTwoPlayers)
 	{
+		isTwoPlayers = _isTwoPlayers;
+		currentPlayer = 1;
 		nbMines = _nbMines;
 		grid = new Grid(_width, _height, nbMines);
 		nbFlags = 0;
 		isWon = false;
 		isLost = false;
-
 	}
 	
 	public Grid getGrid()
@@ -56,9 +59,21 @@ public class Game extends Observable
 				{
 					isWon = true;
 				}
+				else
+				{
+					switchPlayer();
+				}
 			}
 			notifier();
 		}
+	}
+
+	private void switchPlayer()
+	{
+		if (currentPlayer == 1)
+			currentPlayer = 2;
+		else
+			currentPlayer = 1;
 	}
 
 	public void setFlag(Square square)
@@ -107,5 +122,15 @@ public class Game extends Observable
 	public boolean isLost()
 	{
 		return isLost;
+	}
+	
+	public boolean isTwoPlayers()
+	{
+		return isTwoPlayers;
+	}
+	
+	public int getCurrentPlayer()
+	{
+		return currentPlayer;
 	}
 }
